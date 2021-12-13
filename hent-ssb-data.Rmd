@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r setup}
+suppressPackageStartupMessages({
+library(PxWebApiData)
+library(tidyverse)
+library(lubridate)
+})
+
+```
+
+```{r Relevante kommunenummer}
+load("knr.Rdata")
+```
+
+```{r}
+pm2_raw <- ApiData(
+urlToData = "06035",
+Region = knr,
+ContentsCode = "KvPris",
+Boligtype = "01",
+Tid = c(as.character(2002:2017))
+)
+```
+
+```{r}
+ApiData("http://data.ssb.no/api/v0/no/table/06035")
+
+```
