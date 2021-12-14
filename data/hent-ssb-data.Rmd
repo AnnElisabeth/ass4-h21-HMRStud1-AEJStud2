@@ -1,0 +1,43 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r setup}
+suppressPackageStartupMessages({
+library(PxWebApiData)
+library(tidyverse)
+library(lubridate)
+})
+
+```
+
+Les oppgaveteksten og malene nøye. Innhenting av data via hent-sbb-data.Rmd skal skje i en undemappe kalt data. Har opprettet denn og flyttet de respektive filene ned i denne mappen.
+
+```{r Relevante kommunenummer}
+load("knr.Rdata")
+```
+
+```{r}
+pm2_raw <- ApiData(
+urlToData = "06035",
+Region = knr,
+ContentsCode = "KvPris",
+Boligtype = "01",
+Tid = c(as.character(2002:2017))
+)
+```
+
+```{r}
+# vil ikke virke
+#ApiData("http://data.ssb.no/api/v0/no/table/06035")
+```
+
+```{r}
+# structure pm2-raw
+str(pm2_raw)
+```
+
+Ser at resultatet fra ssb er en liste med 2 elementer. Element 2 er kalt dataset og er stort sett der vi henter verdier. For pm2_raw er vi imidlertid også interessert i det første elementet der vi vil hente ut kommunenavn fra varaibelen region. Se malens beskrivelse av hvordan en kan endre navn på dette elementet fra '06035: Selveierboliger, etter region, boligtype, statistikkvariabel og år:' til 'desc' for å gjøre ting enklere.
+
+
