@@ -217,18 +217,9 @@ pre code {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHtcbmBgYCJ9 -->
-<pre class="r"><code>suppressPackageStartupMessages({</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZyBtZXNzYWdlczpcbjE6IEluIGlmIChjaGFyVG9SYXcoeCkgPCAyMCkgcGFzdGUoXCJcXFxcdVwiLCB0b3VwcGVyKGZvcm1hdChhcy5oZXhtb2RlKGFzLmludGVnZXIoY2hhclRvUmF3KHgpKSksICA6XG4gIHRoZSBjb25kaXRpb24gaGFzIGxlbmd0aCA+IDEgYW5kIG9ubHkgdGhlIGZpcnN0IGVsZW1lbnQgd2lsbCBiZSB1c2VkXG4yOiBJbiBpZiAoY2hhclRvUmF3KHgpIDwgMjApIHBhc3RlKFwiXFxcXHVcIiwgdG91cHBlcihmb3JtYXQoYXMuaGV4bW9kZShhcy5pbnRlZ2VyKGNoYXJUb1Jhdyh4KSkpLCAgOlxuICB0aGUgY29uZGl0aW9uIGhhcyBsZW5ndGggPiAxIGFuZCBvbmx5IHRoZSBmaXJzdCBlbGVtZW50IHdpbGwgYmUgdXNlZFxuIn0= -->
-<pre><code>Warning messages:
-1: In if (charToRaw(x) &lt; 20) paste(&quot;\\u&quot;, toupper(format(as.hexmode(as.integer(charToRaw(x))),  :
-  the condition has length &gt; 1 and only the first element will be used
-2: In if (charToRaw(x) &lt; 20) paste(&quot;\\u&quot;, toupper(format(as.hexmode(as.integer(charToRaw(x))),  :
-  the condition has length &gt; 1 and only the first element will be used</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShQeFdlYkFwaURhdGEpXG5saWJyYXJ5KHRpZHl2ZXJzZSlcbmxpYnJhcnkobHVicmlkYXRlKVxufSlcblxuYGBgIn0= -->
-<pre class="r"><code>library(PxWebApiData)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VwcHJlc3NQYWNrYWdlU3RhcnR1cE1lc3NhZ2VzKHtcbmxpYnJhcnkoUHhXZWJBcGlEYXRhKVxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGx1YnJpZGF0ZSlcbn0pXG5cbmBgYCJ9 -->
+<pre class="r"><code>suppressPackageStartupMessages({
+library(PxWebApiData)
 library(tidyverse)
 library(lubridate)
 })
@@ -267,24 +258,26 @@ Tid = c(as.character(2002:2017))
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKHBtMl9yYXcpXG5cbmBgYCJ9 -->
-<pre class="r"><code>str(pm2_raw)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBzdHJ1Y3R1cmUgcG0yLXJhd1xuc3RyKHBtMl9yYXcpXG5gYGAifQ== -->
+<pre class="r"><code># structure pm2-raw
+str(pm2_raw)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTGlzdCBvZiAyXG4gJCAwNjAzNTogU2VsdmVpZXJib2xpZ2VyLCBldHRlciByZWdpb24sIGJvbGlndHlwZSwgc3RhdGlzdGlra3ZhcmlhYmVsIG9nIMOlcjonZGF0YS5mcmFtZSc6XHQ2NzY4IG9icy4gb2YgIDUgdmFyaWFibGVzOlxuICAuLiQgcmVnaW9uICAgICAgICAgICAgOiBjaHIgWzE6Njc2OF0gXCJIYWxkZW4gKC0yMDE5KVwiIFwiSGFsZGVuICgtMjAxOSlcIiBcIkhhbGRlbiAoLTIwMTkpXCIgXCJIYWxkZW4gKC0yMDE5KVwiIC4uLlxuICAuLiQgYm9saWd0eXBlICAgICAgICAgOiBjaHIgWzE6Njc2OF0gXCJFbmVib2xpZ2VyXCIgXCJFbmVib2xpZ2VyXCIgXCJFbmVib2xpZ2VyXCIgXCJFbmVib2xpZ2VyXCIgLi4uXG4gIC4uJCBzdGF0aXN0aWtrdmFyaWFiZWw6IGNociBbMTo2NzY4XSBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiAuLi5cbiAgLi4kIMOlciAgICAgICAgICAgICAgICA6IGNociBbMTo2NzY4XSBcIjIwMDJcIiBcIjIwMDNcIiBcIjIwMDRcIiBcIjIwMDVcIiAuLi5cbiAgLi4kIHZhbHVlICAgICAgICAgICAgIDogaW50IFsxOjY3NjhdIDkwNzAgOTMwMSA5NDM2IDEwODQ2IDEyMDUyIDEyMzYzIDEzNDI3IDEzMDk1IDEzODMyIDE0OTE1IC4uLlxuICQgZGF0YXNldCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDonZGF0YS5mcmFtZSc6XHQ2NzY4IG9icy4gb2YgIDUgdmFyaWFibGVzOlxuICAuLiQgUmVnaW9uICAgICAgOiBjaHIgWzE6Njc2OF0gXCIwMTAxXCIgXCIwMTAxXCIgXCIwMTAxXCIgXCIwMTAxXCIgLi4uXG4gIC4uJCBCb2xpZ3R5cGUgICA6IGNociBbMTo2NzY4XSBcIjAxXCIgXCIwMVwiIFwiMDFcIiBcIjAxXCIgLi4uXG4gIC4uJCBDb250ZW50c0NvZGU6IGNociBbMTo2NzY4XSBcIkt2UHJpc1wiIFwiS3ZQcmlzXCIgXCJLdlByaXNcIiBcIkt2UHJpc1wiIC4uLlxuICAuLiQgVGlkICAgICAgICAgOiBjaHIgWzE6Njc2OF0gXCIyMDAyXCIgXCIyMDAzXCIgXCIyMDA0XCIgXCIyMDA1XCIgLi4uXG4gIC4uJCB2YWx1ZSAgICAgICA6IGludCBbMTo2NzY4XSA5MDcwIDkzMDEgOTQzNiAxMDg0NiAxMjA1MiAxMjM2MyAxMzQyNyAxMzA5NSAxMzgzMiAxNDkxNSAuLi5cbiJ9 -->
+<!-- rnb-output-begin eyJkYXRhIjoiTGlzdCBvZiAyXG4gJCAwNjAzNTogU2VsdmVpZXJib2xpZ2VyLCBldHRlciByZWdpb24sIGJvbGlndHlwZSwgc3RhdGlzdGlra3ZhcmlhYmVsIG9nIMOlcjonZGF0YS5mcmFtZSc6XHQ2NzY4IG9icy4gb2YgIDYgdmFyaWFibGVzOlxuICAuLiQgcmVnaW9uICAgICAgICAgICAgOiBjaHIgWzE6Njc2OF0gXCJIYWxkZW4gKC0yMDE5KVwiIFwiSGFsZGVuICgtMjAxOSlcIiBcIkhhbGRlbiAoLTIwMTkpXCIgXCJIYWxkZW4gKC0yMDE5KVwiIC4uLlxuICAuLiQgYm9saWd0eXBlICAgICAgICAgOiBjaHIgWzE6Njc2OF0gXCJFbmVib2xpZ2VyXCIgXCJFbmVib2xpZ2VyXCIgXCJFbmVib2xpZ2VyXCIgXCJFbmVib2xpZ2VyXCIgLi4uXG4gIC4uJCBzdGF0aXN0aWtrdmFyaWFiZWw6IGNociBbMTo2NzY4XSBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiBcIkdqZW5ub21zbml0dGxpZyBrdmFkcmF0bWV0ZXJwcmlzIChrcilcIiAuLi5cbiAgLi4kIMOlciAgICAgICAgICAgICAgICA6IGNociBbMTo2NzY4XSBcIjIwMDJcIiBcIjIwMDNcIiBcIjIwMDRcIiBcIjIwMDVcIiAuLi5cbiAgLi4kIHZhbHVlICAgICAgICAgICAgIDogaW50IFsxOjY3NjhdIDkwNzAgOTMwMSA5NDM2IDEwODQ2IDEyMDUyIDEyMzYzIDEzNDI3IDEzMDk1IDEzODMyIDE0OTE1IC4uLlxuICAuLiQgTkFzdGF0dXMgICAgICAgICAgOiBjaHIgWzE6Njc2OF0gTkEgTkEgTkEgTkEgLi4uXG4gJCBkYXRhc2V0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOidkYXRhLmZyYW1lJzpcdDY3Njggb2JzLiBvZiAgNiB2YXJpYWJsZXM6XG4gIC4uJCBSZWdpb24gICAgICA6IGNociBbMTo2NzY4XSBcIjAxMDFcIiBcIjAxMDFcIiBcIjAxMDFcIiBcIjAxMDFcIiAuLi5cbiAgLi4kIEJvbGlndHlwZSAgIDogY2hyIFsxOjY3NjhdIFwiMDFcIiBcIjAxXCIgXCIwMVwiIFwiMDFcIiAuLi5cbiAgLi4kIENvbnRlbnRzQ29kZTogY2hyIFsxOjY3NjhdIFwiS3ZQcmlzXCIgXCJLdlByaXNcIiBcIkt2UHJpc1wiIFwiS3ZQcmlzXCIgLi4uXG4gIC4uJCBUaWQgICAgICAgICA6IGNociBbMTo2NzY4XSBcIjIwMDJcIiBcIjIwMDNcIiBcIjIwMDRcIiBcIjIwMDVcIiAuLi5cbiAgLi4kIHZhbHVlICAgICAgIDogaW50IFsxOjY3NjhdIDkwNzAgOTMwMSA5NDM2IDEwODQ2IDEyMDUyIDEyMzYzIDEzNDI3IDEzMDk1IDEzODMyIDE0OTE1IC4uLlxuICAuLiQgTkFzdGF0dXMgICAgOiBjaHIgWzE6Njc2OF0gTkEgTkEgTkEgTkEgLi4uXG4ifQ== -->
 <pre><code>List of 2
- $ 06035: Selveierboliger, etter region, boligtype, statistikkvariabel og år:&#39;data.frame&#39;:  6768 obs. of  5 variables:
+ $ 06035: Selveierboliger, etter region, boligtype, statistikkvariabel og år:&#39;data.frame&#39;:  6768 obs. of  6 variables:
   ..$ region            : chr [1:6768] &quot;Halden (-2019)&quot; &quot;Halden (-2019)&quot; &quot;Halden (-2019)&quot; &quot;Halden (-2019)&quot; ...
   ..$ boligtype         : chr [1:6768] &quot;Eneboliger&quot; &quot;Eneboliger&quot; &quot;Eneboliger&quot; &quot;Eneboliger&quot; ...
   ..$ statistikkvariabel: chr [1:6768] &quot;Gjennomsnittlig kvadratmeterpris (kr)&quot; &quot;Gjennomsnittlig kvadratmeterpris (kr)&quot; &quot;Gjennomsnittlig kvadratmeterpris (kr)&quot; &quot;Gjennomsnittlig kvadratmeterpris (kr)&quot; ...
   ..$ år                : chr [1:6768] &quot;2002&quot; &quot;2003&quot; &quot;2004&quot; &quot;2005&quot; ...
   ..$ value             : int [1:6768] 9070 9301 9436 10846 12052 12363 13427 13095 13832 14915 ...
- $ dataset                                                                  :&#39;data.frame&#39;:  6768 obs. of  5 variables:
+  ..$ NAstatus          : chr [1:6768] NA NA NA NA ...
+ $ dataset                                                                  :&#39;data.frame&#39;:  6768 obs. of  6 variables:
   ..$ Region      : chr [1:6768] &quot;0101&quot; &quot;0101&quot; &quot;0101&quot; &quot;0101&quot; ...
   ..$ Boligtype   : chr [1:6768] &quot;01&quot; &quot;01&quot; &quot;01&quot; &quot;01&quot; ...
   ..$ ContentsCode: chr [1:6768] &quot;KvPris&quot; &quot;KvPris&quot; &quot;KvPris&quot; &quot;KvPris&quot; ...
   ..$ Tid         : chr [1:6768] &quot;2002&quot; &quot;2003&quot; &quot;2004&quot; &quot;2005&quot; ...
-  ..$ value       : int [1:6768] 9070 9301 9436 10846 12052 12363 13427 13095 13832 14915 ...</code></pre>
+  ..$ value       : int [1:6768] 9070 9301 9436 10846 12052 12363 13427 13095 13832 14915 ...
+  ..$ NAstatus    : chr [1:6768] NA NA NA NA ...</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
