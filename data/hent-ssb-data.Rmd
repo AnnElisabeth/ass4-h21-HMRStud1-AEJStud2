@@ -1,5 +1,6 @@
 ---
-title: "R Notebook"
+title: "Assignment 4"
+author: "Heidi and Ann Elisabeth"
 output: html_notebook
 ---
 
@@ -12,7 +13,9 @@ library(lubridate)
 
 ```
 
-Les oppgaveteksten og malene nøye. Innhenting av data via hent-sbb-data.Rmd skal skje i en undemappe kalt data. Har opprettet denn og flyttet de respektive filene ned i denne mappen.
+Les oppgaveteksten og malene nøye. Innhenting av data via
+hent-sbb-data.Rmd skal skje i en undemappe kalt data. Har opprettet denn
+og flyttet de respektive filene ned i denne mappen.
 
 ```{r Relevante kommunenummer}
 load("knr.Rdata")
@@ -38,6 +41,65 @@ Tid = c(as.character(2002:2017))
 str(pm2_raw)
 ```
 
-Ser at resultatet fra ssb er en liste med 2 elementer. Element 2 er kalt dataset og er stort sett der vi henter verdier. For pm2_raw er vi imidlertid også interessert i det første elementet der vi vil hente ut kommunenavn fra varaibelen region. Se malens beskrivelse av hvordan en kan endre navn på dette elementet fra '06035: Selveierboliger, etter region, boligtype, statistikkvariabel og år:' til 'desc' for å gjøre ting enklere.
+Ser at resultatet fra ssb er en liste med 2 elementer. Element 2 er kalt
+dataset og er stort sett der vi henter verdier. For pm2_raw er vi
+imidlertid også interessert i det første elementet der vi vil hente ut
+kommunenavn fra varaibelen region. Se malens beskrivelse av hvordan en
+kan endre navn på dette elementet fra '06035: Selveierboliger, etter
+region, boligtype, statistikkvariabel og år:' til 'desc' for å gjøre
+ting enklere.
 
+```{r}
+pm2 <- pm2_raw$dataset %>%
+  tibble() %>%
+  select(-Boligtype, -ContentsCode) %>%
+  rename(
+    knr = Region, 
+    aar = Tid, 
+    pm2 = value
+  )
+head(pm2)
+```
 
+```{r}
+names(pm2_raw)[[1]] <- "desc"
+
+```
+
+```{r}
+pm2 <- pm2 %>% 
+  mutate(
+    knavn = pm2_raw$desc$region
+  )
+
+```
+
+```{r}
+str_view(pm2_raw, "knr")
+
+```
+
+```{r}
+load("test_string_tib.Rdata")
+moenster <- '\\s+\\(\\d*[19-]\\d*[2019]\\)\\s*$'
+```
+
+```{r}
+test_string_tib %>% 
+  mutate(
+    knavn = str_replace(knavn, moenster, "")
+  )
+
+```
+
+```{r}
+df_pm2 <- pm2 %>% 
+   map_df(is.na) %>% 
+   map_df(sum)
+```
+
+```{r}
+df_pm2 %>% 
+   table()
+
+```
