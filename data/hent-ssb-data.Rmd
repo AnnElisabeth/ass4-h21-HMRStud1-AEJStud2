@@ -69,9 +69,10 @@ names(pm2_raw)[[1]] <- "desc"
 ```{r}
 pm2 <- pm2 %>% 
   mutate(
-    knavn = pm2_raw$desc$region
-  )
-
+    knavn = pm2_raw$desc$region) %>%
+  group_by(knr) %>%
+  select(knr, aar, pm2, knavn)
+ 
 ```
 
 ```{r}
@@ -81,25 +82,91 @@ str_view(pm2_raw, "knr")
 
 ```{r}
 load("test_string_tib.Rdata")
-moenster <- '\\s+\\(\\d*[19-]\\d*[2019]\\)\\s*$'
+moenster <- '\\s*\\([\\d\\s-]*\\d*\\)\\s*$'
 ```
 
 ```{r}
-test_string_tib %>% 
+pm2 <- pm2 %>%
   mutate(
-    knavn = str_replace(knavn, moenster, "")
+    knavn = str_replace(knavn,moenster,"")
   )
-
 ```
+ 
 
 ```{r}
-df_pm2 <- pm2 %>% 
+pm2 %>% 
    map_df(is.na) %>% 
-   map_df(sum)
+   map_df(sum) %>%
+  as.tibble()
+```
+
+Complete cases
+
+```{r}
+pm2_2006 <- pm2 %>%
+  filter(aar >= 2006) %>%
+  pivot_wider(names_from = aar,
+              values_from = pm2)
+```
+
+
+```{r}
+pm2_2006 %>%
+  complete.cases() %>%
+  sum()
 ```
 
 ```{r}
-df_pm2 %>% 
-   table()
+pm2_2008 <- pm2 %>%
+  filter(aar >= 2008) %>%
+  pivot_wider(
+    names_from = aar,
+    values_from = pm2
+           )
+```
+
+
+```{r}
+pm2_2008 %>%
+  complete.cases() %>%
+  sum()
 
 ```
+
+#time to clean up
+dinna virker ikke
+```{r}
+rm(pm2_raw)
+```
+
+
+#Befolkning
+
+ny tabell 
+```{r}
+pop_08_17_ya_raw <- ApiData(
+urlToData = "07459",
+Region = knr,
+Kjonn = c(1,2),
+Alder = list("agg:TredeltGrupperingB2",
+             c("F20-64")),
+Tid = c(as.character(2008:2017))
+)
+pop_08_17_ya_raw <- pop_08_17_ya_raw$dataset %>%
+  select(-ContentsCode, -Alder)
+```
+
+```{r}
+view(pop_08_17_ya_raw)
+```
+
+
+```{r}
+pop_08_17_ya <- pop_08_17_ya_raw %>%
+  pivot_wider(
+    id_cols = c(Region, Tid),
+    names_prefix = "sex",
+    names_from = Kjonn,
+    values_from = value)
+```
+
