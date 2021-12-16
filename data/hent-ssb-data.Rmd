@@ -156,10 +156,6 @@ pop_08_17_ya_raw <- pop_08_17_ya_raw$dataset %>%
   select(-ContentsCode, -Alder)
 ```
 
-```{r}
-view(pop_08_17_ya_raw)
-```
-
 
 ```{r}
 pop_08_17_ya <- pop_08_17_ya_raw %>%
@@ -168,5 +164,23 @@ pop_08_17_ya <- pop_08_17_ya_raw %>%
     names_prefix = "sex",
     names_from = Kjonn,
     values_from = value)
+```
+
+nye navn
+
+```{r}
+names(pop_08_17_ya)[[1]] <- "knr"
+names(pop_08_17_ya)[[2]] <- "aar"
+names(pop_08_17_ya)[[3]] <- "ya_Menn"
+names(pop_08_17_ya)[[4]] <- "ya_Kvinner"
+```
+
+```{r}
+pop_08_17_ya <- pop_08_17_ya %>%
+  mutate(ya_total = ya_Menn + ya_Kvinner)
+```
+
+```{r}
+dim(pop_08_17_ya)
 ```
 
