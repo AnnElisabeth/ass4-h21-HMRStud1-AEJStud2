@@ -13,15 +13,15 @@ library(lubridate)
 
 ```
 
-Les oppgaveteksten og malene nøye. Innhenting av data via
-hent-sbb-data.Rmd skal skje i en undemappe kalt data. Har opprettet denn
-og flyttet de respektive filene ned i denne mappen.
-
 ```{r Relevante kommunenummer}
 load("knr.Rdata")
 ```
 
-```{r}
+Vi begynner oppgaven med å se på data som viser gjennomsnittlig
+kvadratmeterpris for eneboliger i perioden 2002 til 2017. Vi henter ned
+tabell 06035. Gjennomsnittet er regnet ut for hver kommune.
+
+```{r Beregning av gjennomsnittlig kvadratmeterpris}
 pm2_raw <- ApiData(
 urlToData = "06035",
 Region = knr,
@@ -32,11 +32,10 @@ Tid = c(as.character(2002:2017))
 ```
 
 ```{r}
-# vil ikke virke
 #ApiData("http://data.ssb.no/api/v0/no/table/06035")
 ```
 
-```{r}
+```{r Struktur}
 # structure pm2-raw
 str(pm2_raw)
 ```
@@ -49,7 +48,7 @@ kan endre navn på dette elementet fra '06035: Selveierboliger, etter
 region, boligtype, statistikkvariabel og år:' til 'desc' for å gjøre
 ting enklere.
 
-```{r}
+```{r Dataset}
 pm2 <- pm2_raw$dataset %>%
   tibble() %>%
   select(-Boligtype, -ContentsCode) %>%
@@ -61,7 +60,7 @@ pm2 <- pm2_raw$dataset %>%
 head(pm2)
 ```
 
-```{r}
+```{r Navn endret til desc}
 names(pm2_raw)[[1]] <- "desc"
 
 ```
@@ -85,22 +84,23 @@ load("test_string_tib.Rdata")
 moenster <- '\\s*\\([\\d\\s-]*\\d*\\)\\s*$'
 ```
 
-```{r}
+```{r Kommunenavn}
 pm2 <- pm2 %>%
   mutate(
     knavn = str_replace(knavn,moenster,"")
   )
 ```
- 
 
-```{r}
+```{r NA }
 pm2 %>% 
    map_df(is.na) %>% 
    map_df(sum) %>%
   as.tibble()
 ```
 
-Complete cases
+Det er 2903 NA verdier i pm2.
+
+Nå ønsker vi å se på hvor mange complete cases vi har fra 2006 til 2017
 
 ```{r}
 pm2_2006 <- pm2 %>%
@@ -109,12 +109,13 @@ pm2_2006 <- pm2 %>%
               values_from = pm2)
 ```
 
-
-```{r}
+```{r Svar}
 pm2_2006 %>%
   complete.cases() %>%
   sum()
 ```
+
+Det er 197 completed cases i perioden 2006 til 2017.
 
 ```{r}
 pm2_2008 <- pm2 %>%
@@ -125,6 +126,7 @@ pm2_2008 <- pm2 %>%
            )
 ```
 
+Complete cases i 2008
 
 ```{r}
 pm2_2008 %>%
@@ -133,42 +135,53 @@ pm2_2008 %>%
 
 ```
 
-#time to clean up
-dinna virker ikke
-```{r}
-rm(pm2_raw)
+Vi har 214 complete cases i 2008.
+
+```{r Navneendring}
+#Denne virker ikke 
+knr <- knr_c.c
 ```
 
-
-#Befolkning
-
-ny tabell 
-```{r}
-pop_08_17_ya_raw <- ApiData(
-urlToData = "07459",
-Region = knr,
-Kjonn = c(1,2),
-Alder = list("agg:TredeltGrupperingB2",
-             c("F20-64")),
-Tid = c(as.character(2008:2017))
-)
-pop_08_17_ya_raw <- pop_08_17_ya_raw$dataset %>%
-  select(-ContentsCode, -Alder)
+```{r Rydde opp}
+rm(knr_c.c, pm2_raw)
 ```
 
-
 ```{r}
-pop_08_17_ya <- pop_08_17_ya_raw %>%
-  pivot_wider(
-    id_cols = c(Region, Tid),
-    names_prefix = "sex",
-    names_from = Kjonn,
-    values_from = value)
+pm2 <- pm2_2008 %>% 
+   na.omit(pm2)
+
 ```
 
-nye navn
+\#Befolkning
+
+Vi bruker en ny tabell som heter 07459. Her ønsker vi å finne
+prosentandelen av befolkningen i hver kommune som er i yrkesaktiv alder.
+I tabellen kan vi finne personer i alderen 20 til 64 år. Vi kan også i
+denne tabellen finne total befolkning i hver kommune. ut i fra det
+finner vi prosent i yrkesaktiv alder. det gjør vi ved å dividere de to
+størrelsene og multiplisere ved 100.
 
 ```{r}
+pop_08_17_ya_raw <- ApiData(urlToData = "07459",
+    Region = knr,
+    Kjonn = c(1,2),
+    Alder = list("agg:TredeltGrupperingB2",
+                  c("F20-64")),
+    Tid = c(as.character(2008:2017))
+    )$dataset %>%
+   select(-ContentsCode, -Alder)
+```
+
+```{r}
+pop_08_17_ya <- pop_08_17_ya_raw %>% 
+   pivot_wider(
+     id_cols = c(Region, Tid),
+     names_prefix = "sex",
+     names_from = Kjonn,
+     values_from = value)
+```
+
+```{r endring av navn}
 names(pop_08_17_ya)[[1]] <- "knr"
 names(pop_08_17_ya)[[2]] <- "aar"
 names(pop_08_17_ya)[[3]] <- "ya_Menn"
@@ -176,11 +189,329 @@ names(pop_08_17_ya)[[4]] <- "ya_Kvinner"
 ```
 
 ```{r}
-pop_08_17_ya <- pop_08_17_ya %>%
-  mutate(ya_total = ya_Menn + ya_Kvinner)
+pop_08_17_ya <- pop_08_17_ya %>% 
+   mutate(ya_Total = ya_Menn + ya_Kvinner)
 ```
+
+Vi får tallene 4230 og 5.
 
 ```{r}
 dim(pop_08_17_ya)
 ```
 
+```{r}
+names(pop_08_17_ya)
+
+```
+
+```{r}
+dim(pop_08_17)
+
+```
+
+```{r}
+names(pop_08_17)
+```
+
+```{r SSB}
+pop_08_17_raw <- ApiData(
+  urlToData = "07459",
+  Region = knr,
+  Kjonn = c(1,2),
+  Alder = list("agg:TodeltGrupperingB",
+               c("H17", "H18")),
+  Tid = c(as.character(2008:2017))
+)$dataset %>% 
+  select(-ContentsCode)
+
+```
+
+```{r}
+pop_08_17 <- pop_08_17_raw %>% 
+  pivot_wider(
+    names_from = Kjonn,
+    values_from = value
+  )
+```
+
+```{r navn}
+names(pop_08_17)[[1]] <- "knr"
+names(pop_08_17)[[2]] <- "Alder"
+names(pop_08_17)[[3]] <- "aar"
+names(pop_08_17)[[4]] <- "Menn"
+names(pop_08_17)[[5]] <- "Kvinner"
+```
+
+```{r}
+pop_08_17 <- pop_08_17 %>% 
+   pivot_wider(
+     names_from = Alder,
+     values_from = c(Menn, Kvinner)
+   )
+```
+
+```{r}
+pop_08_17 <- pop_08_17 %>% 
+   mutate(Menn_t = Menn_H17 + Menn_H18) %>% 
+   mutate(Kvinner_t = Kvinner_H17 + Kvinner_H18) %>% 
+   mutate(Totalt_t = Menn_t + Kvinner_t)
+```
+
+```{r}
+pop_08_17 <- pop_08_17 %>% 
+  select(knr, aar, Menn_t, Kvinner_t, Totalt_t)
+
+```
+
+```{r}
+dim(pop_08_17)
+
+```
+
+```{r}
+names(pop_08_17)
+
+```
+
+```{r}
+pop_08_17_ya_p <- merge(pop_08_17, pop_08_17_ya)
+```
+
+```{r}
+pop_08_17_ya_p <- pop_08_17_ya_p %>% 
+  mutate(Menn_ya_p = ya_Menn/Menn_t*100) %>% 
+  mutate(Kvinner_ya_p = ya_Kvinner/Kvinner_t*100) %>% 
+  mutate(Total_ya_p = ya_Total/Totalt_t*100)
+
+```
+
+```{r}
+pop_08_17_ya_p <- pop_08_17_ya_p %>% 
+  select(knr, aar, Menn_ya_p, Kvinner_ya_p,Total_ya_p)
+```
+
+```{r}
+head(pop_08_17_ya_p, n=5)
+
+```
+
+```{r}
+pm2 <- merge(pm2, pop_08_17_ya_p)
+
+```
+
+```{r}
+pm2 <- pm2 %>% 
+   select(knr, knavn, aar, pm2, Menn_ya_p, Kvinner_ya_p, Total_ya_p)
+```
+
+```{r Slette objekter}
+rm(pop_08_17_raw, pop_08_17_ya_raw, pop_08_17, pop_08_17_ya, pm2_2006, pm2_2008)
+```
+
+\#Inntektsdesiler
+
+```{r}
+inc_08_17_raw <- ApiData(
+  urlToData = "12558",
+  Region = knr,
+  Desiler = c("01", "02", "09", "10"),
+  ContentsCode = "AndelHush",
+  InntektSkatt = "00",
+  Tid = c(
+    as.character(2008:2017)
+  )
+)$dataset %>% 
+  select(Region, Desiler, Tid, value)
+
+
+```
+
+```{r}
+inc_08_17 <- inc_08_17_raw %>% 
+  pivot_wider(
+    names_from = Desiler,
+    values_from = value
+  )
+
+```
+
+```{r varibalene får navn}
+names(inc_08_17)[[1]] <- "knr"
+ names(inc_08_17)[[2]] <- "aar"
+ names(inc_08_17)[[3]] <- "Desil_1"
+ names(inc_08_17)[[4]] <- "Desil_2"
+ names(inc_08_17)[[5]] <- "Desil_9"
+ names(inc_08_17)[[6]] <- "Desil_10"
+```
+
+```{r}
+inc_08_17 <- inc_08_17 %>% 
+  mutate(inc_k1 = Desil_1 + Desil_2) %>% 
+  mutate(inc_k5 = Desil_9 + Desil_10)
+
+```
+
+```{r}
+inc_08_17 <- inc_08_17 %>% 
+  select(knr, aar, inc_k1, inc_k5)
+
+```
+
+```{r}
+names(inc_08_17)
+
+```
+
+```{r Opplysninger}
+dim(inc_08_17)
+
+```
+
+Vi ender opp med 4230 og 4.
+
+```{r Nye variabler}
+pm2 <- merge(pm2, inc_08_17)
+
+```
+
+```{r Oppryddning}
+rm(inc_08_17, inc_08_17_raw, pop_08_17_ya_p)
+
+```
+
+\#Prosent av befolkning med universitets/høgskole utdanning
+
+```{r ny tabell}
+uni_p_raw <- ApiData(
+  urlToData = "09429",
+  Region = knr,
+  Nivaa = c("03a", "04a"),
+  Kjonn = TRUE,
+  ContentsCode = "PersonerProsent",
+  Tid = c(
+    as.character(2008:2017)
+  )
+)
+```
+
+```{r}
+uni_p_raw <- tibble(
+   knr = uni_p_raw$dataset$Region,
+   aar = uni_p_raw$dataset$Tid,
+   Kjonn = uni_p_raw$`09429: Personer 16 år og over, etter region, nivå, kjønn, statistikkvariabel og år`$kjønn,
+   nivaa = uni_p_raw$`09429: Personer 16 år og over, etter region, nivå, kjønn, statistikkvariabel og år`$nivå,
+   uni_p = uni_p_raw$dataset$value
+ )
+ head(uni_p_raw, n=5)
+
+```
+
+```{r}
+uni_p_raw <- uni_p_raw %>% 
+   mutate(
+     nivaa = fct_recode(nivaa,
+                        "uni_k" = "Universitets- og høgskolenivå, kort",
+                        "uni_l" = "Universitets- og høgskolenivå, lang")
+   )
+```
+
+```{r}
+uni_p_raw <- uni_p_raw %>% 
+   mutate(
+     Kjonn = fct_recode(Kjonn,
+                        "mf" = "Begge kjønn",
+                        "f" = "Kvinner",
+                        "m" = "Menn"
+                        )
+   )
+```
+
+```{r}
+uni_p_raw <- uni_p_raw %>% 
+   pivot_wider(
+     id_cols = c(knr, aar),
+     names_from = c(nivaa, Kjonn),
+     values_from = uni_p
+   )
+
+```
+
+```{r}
+head(uni_p_raw, n = 8)
+```
+
+Flettes sammen:
+
+\#Handelsomsetning pr innbygger
+
+```{r}
+trade_08_17 <- ApiData(
+  urlToData = "04776",
+  Region = knr,
+  Tid = c(
+    as.character(2008:2017)
+  )
+)
+
+```
+
+```{r}
+trade_08_17 <- tibble(
+  aar = trade_08_17$dataset$Tid,
+  Trade_p = trade_08_17$dataset$value,
+  knr = trade_08_17$dataset$Region
+)
+```
+
+```{r}
+Trade_pc <- trade_08_17
+
+```
+
+```{r}
+pm2 <- merge(pm2, Trade_pc)
+
+```
+
+Slette de objektene som ikke lenger trengs
+
+```{r}
+rm(trade_08_17, Trade_pc)
+```
+
+```{r}
+dim(pm2)
+
+```
+
+```{r}
+names(pm2)
+
+```
+
+Disse stemmer ikke
+
+```{r}
+pm2 %>% 
+  select(knr:"inc_k5) %>% 
+  head(n=8)
+```
+
+```{r}
+pm2 %>% 
+   select(knr:inc_k5) %>% 
+   head(n=8)
+```
+
+```{r}
+pm2 %>% 
+   select(uni_k_mf:Trade_p) %>% 
+   head(n=8)
+
+```
+
+```{r}
+write.csv(pm2, "pm2.csv")
+
+```
