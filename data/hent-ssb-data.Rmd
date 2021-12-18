@@ -193,16 +193,59 @@ pop_08_17_ya <- pop_08_17_ya %>%
    mutate(ya_Total = ya_Menn + ya_Kvinner)
 ```
 
-Vi får tallene 4230 og 5.
+
 
 ```{r}
 dim(pop_08_17_ya)
 ```
+Vi får tallene 4230 og 5.
 
 ```{r}
 names(pop_08_17_ya)
 
 ```
+
+ii. befolkningen totalt
+
+```{r}
+pop_08_17_raw <- ApiData(
+    urlToData = "07459",
+    Region = knr,
+    Kjonn = c(1, 2),
+    Alder = list("agg:TodeltGrupperingB",
+                  c("H17", "H18")),
+    Tid = c(as.character(2008:2017))
+    )$dataset %>%
+   select(-ContentsCode)
+```
+
+rydde i dataene ved å bruke Tidy
+
+```{r}
+pop_08_17 <- pop_08_17_raw %>% 
+   pivot_wider(
+     names_from = Kjonn,
+     values_from = value
+     )
+```
+
+ordner opp i navn
+
+```{r}
+names(pop_08_17)[[1]] <- "knr"
+names(pop_08_17)[[2]] <- "alder"
+names(pop_08_17)[[3]] <- "aar"
+names(pop_08_17)[[4]] <- "Menn"
+names(pop_08_17)[[5]] <- "Kvinner"
+```
+
+mutate for å definere nye variabler 
+
+```{r}
+pop_08_17_ya <- pop_08_17_ya %>% 
+   mutate(ya_Total = ya_Menn + ya_Kvinner)
+```
+
 
 ```{r}
 dim(pop_08_17)
