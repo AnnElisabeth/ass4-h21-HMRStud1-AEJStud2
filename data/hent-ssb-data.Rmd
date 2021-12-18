@@ -71,10 +71,9 @@ pm2 <- pm2 %>%
     knavn = pm2_raw$desc$region) %>%
   group_by(knr) %>%
   select(knr, aar, pm2, knavn)
- 
 ```
 
-
+ 
 ```{r}
 load("test_string_tib.Rdata")
 moenster <- '\\s*\\([\\d\\s-]*\\d*\\)\\s*$'
@@ -148,7 +147,7 @@ names(pm2_2008)
 
 
 ```{r Rydde opp}
-rm(pm2_raw)
+rm(pm2_raw, knr)
 ```
 
 
