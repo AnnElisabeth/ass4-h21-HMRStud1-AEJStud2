@@ -30,6 +30,7 @@ pm2 <- pm2 %>%
 ```{r Oversikten over variablene i pm2}
 head(pm2)
 ```
+
 ```{r Parse factor}
 pm2 %>% 
   mutate(
@@ -48,6 +49,7 @@ pm2 <- pm2 %>%
 ```{r Oversikt}
 head(pm2, n = 4)
 ```
+
 ```{r Tabell 1}
 tibble("knr", "fnr", "aar_f", "Trade_pc_100k")
 ```
@@ -71,16 +73,6 @@ head(pm2, n = 4)
 ```{r Oppsummering}
 summary(lm1)
 ```
-```
-
-Svar på spørsmål om koffisientene: 
-i. Ut i fra årskoffisientene kan vi se at prisene stiger jevnt over hvert år. 
-
-ii. Det sier oss dessverre ikke så mye. 
-
-Heterioskedastisitet 
-
-Vi benytter en Breuch-Pagen test
 ```{r}
 bptest(lm1)
 ```
@@ -92,15 +84,8 @@ Rapportere robuste standard feil og tilhørende robuste t-verdier
 coeftest(lm1)
 ```
 
-```{r}
-vcovHC(lm1)
-```
-
 Flytter residualene fra lm1 til datasettet pm2
-```{r}
-pm2 <- pm2 %>% 
-  add_residuals(lm1)
-```
+
 
 lager ny variabel 
 ```{r}
