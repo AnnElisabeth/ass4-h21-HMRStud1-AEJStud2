@@ -137,13 +137,8 @@ pm2_2008 %>%
 
 Vi har 214 complete cases i 2008.
 
-```{r Navneendring}
-#Denne virker ikke 
-knr <- knr_c.c
-```
-
 ```{r Rydde opp}
-rm(knr_c.c, pm2_raw)
+rm(knr, pm2_raw)
 ```
 
 ```{r}
