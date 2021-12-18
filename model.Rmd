@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Modeller"
 output: html_notebook
 ---
 
@@ -13,5 +13,87 @@ suppressPackageStartupMessages({
   library(sandwich)
   library(viridis)
 })
-knitr::opts_chunk$set(echo = FALSE, include = FALSE)
+
+```
+
+```{r}
+pm2 <- read_csv("data/pm2.csv", show_col_types = FALSE)
+```
+
+```{r}
+pm2 <- pm2 %>% 
+   mutate(
+     fnr = str_sub(knr, 1,2),
+     aar_f = str_sub(aar)
+   )
+```
+
+```{r}
+head(pm2)
+
+```
+
+```{r}
+pm2 %>% 
+   mutate(
+     fnr = parse_factor(fnr, levels = fnr),
+     aar_f = parse_factor(aar_f, levels = aar_f)
+  )
+```
+
+```{r}
+pm2 <- pm2 %>% 
+   mutate(
+     Trade_pc_100K = Trade_p/100000
+   ) 
+```
+
+```{r}
+head(pm2, n = 4) %>% 
+   select(knr, fnr, aar_f, Trade_pc_100K)
+```
+
+\#Modell
+
+```{r}
+head(pm2, n = 4) %>% 
+   select(knr, fnr, aar_f, Trade_pc_100K)
+```
+
+```{r}
+lm1 <- lm(mod1, data = pm2, subset = complete.cases(pm2))
+```
+
+```{r}
+summary(lm1)
+```
+
+\#Dummy fylke og år
+
+```{r}
+mod2 <- 'pm2 ~ aar_f*fnr + Total_ya_p + inc_k1 + inc_k5 + uni_k_mf + uni_l_mf + Trade_pc_100K'
+```
+
+```{r}
+lm2 <- lm(mod2, data = pm2)
+```
+
+```{r}
+summary(lm2)
+```
+
+```{r}
+pm2 <- pm2 %>%
+   mutate(res_m2 = resid(lm2))
+```
+
+```{r}
+pm2 %>% filter(fnr %in% c("11")) %>%
+  ggplot(mapping = aes(x = aar_d, y = res_m2)) +
+  scale_color_viridis(discrete = TRUE, option = "D") +
+  geom_line(aes(group = knavn, colour = knavn, size = knavn)) +
+  scale_size_manual(values = c(seq(2.0, 0.5, by = -0.1))) +
+  geom_hline(yintercept = 0) +
+  theme(legend.position = 'bottom')
+
 ```
