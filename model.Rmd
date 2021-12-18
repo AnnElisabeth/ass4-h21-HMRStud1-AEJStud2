@@ -54,7 +54,8 @@ head(pm2, n = 4)
 tibble("knr", "fnr", "aar_f", "Trade_pc_100k")
 ```
 
-#Modell
+\#Modell
+
 ```{r Modell}
 mod1 <- 'pm2 ~ aar_f + Total_ya_p + inc_k1 + inc_k5 + uni_k_mf + uni_l_mf + Trade_pc_100K'
 ```
@@ -64,6 +65,7 @@ lm1 <- lm(mod1, data = pm2, subset = complete.cases(pm2))
 ```
 
 Vi legger inn residualene fra den linære modellen
+
 ```{r Residualer}
 pm2 %>% 
 add_residuals(lm1)
@@ -73,27 +75,35 @@ head(pm2, n = 4)
 ```{r Oppsummering}
 summary(lm1)
 ```
+
 ```{r}
 bptest(lm1)
 ```
 
-Ja vi har problemer med heteroskedasiteten her pga at verdien er for høy. 
+Ja vi har problemer med heteroskedasiteten her pga at verdien er for
+høy.
 
 Rapportere robuste standard feil og tilhørende robuste t-verdier
+
 ```{r}
 coeftest(lm1)
 ```
 
 Flytter residualene fra lm1 til datasettet pm2
 
+```{r}
+vcovHC(lm1)
+```
 
-lager ny variabel 
+lager ny variabel
+
 ```{r}
 pm2 <- pm2 %>%
 mutate(aar_d = make_date(aar))
 ```
 
 Vi filterer ut fylkene Østfold, Akershus, Oslo, Rogaland og Hordaland
+
 ```{r}
 pm2 <- pm2 %>%
 mutate(fylke = substr(knr, start = 1, stop = 2))
@@ -105,6 +115,7 @@ pm2 <- pm2 %>%
 ```
 
 Oppgave 7 til 10
+
 ```{r}
 pm2 %>% 
   unnest(c(fylke)) %>% 
@@ -116,14 +127,16 @@ pm2 %>%
   theme(legend.position = "bottom")
 ```
 
-#Dummy fylke og år 
+\#Dummy fylke og år
 
 Vi innfører en dummy for hvert fylke
+
 ```{r}
 mod2 <- 'pm2 ~ aar_f*fnr + Total_ya_p + inc_k1 + inc_k5 + uni_k_mf + uni_l_mf + Trade_pc_100K'
 ```
 
 Vi genererer lm 2 fra modell 2 og datasettet pm2
+
 ```{r}
 lm2 <- lm(mod2, data = pm2)
 ```
@@ -133,6 +146,7 @@ summary(lm2)
 ```
 
 Vi legger inn residualene fra lm2 til pm2 og kaller dem res_m2
+
 ```{r}
 pm2 <- pm2 %>%
   mutate(res_m2 = resid(lm2))
@@ -149,7 +163,8 @@ geom_hline(yintercept = 0) +
 theme(legend.position = 'bottom') +
   facet_wrap(~fylke)
 ```
-i. 
+
+i.  
 
 ii. 
 
@@ -166,6 +181,7 @@ theme(legend.position = 'bottom'
 ```
 
 Vi gjentar plottet ovenfor med utvalgte kommuner
+
 ```{r}
 pm2 %>% filter(knr %in% c("1119", "1120", "1127", "1121", "1130", "1135", "1106", "1149")) %>%
 ggplot(mapping = aes(x = aar_d, y = res_m2)) +
@@ -176,11 +192,12 @@ geom_hline(yintercept = 0) +
 theme(legend.position = 'bottom')
 ```
 
-Det som kjennetegner kommunene i Rogland 
+Det som kjennetegner kommunene i Rogland
 
-#Modell for hvert år 
+\#Modell for hvert år
 
-i. 
+i.  
+
 ```{r}
 pm2_n <- pm2 %>% 
    group_by(aar) %>%
@@ -191,10 +208,12 @@ pm2_n <- pm2 %>%
 ```{r}
 pm2_n
 ```
+
 ```{r}
 pm2_n$data[[1]] %>%
  head(n = 5)
 ```
+
 ```{r}
 dim(pm2_n)
 ```
@@ -210,11 +229,11 @@ pm2_n <- pm2_n %>%
    mutate(model = map(data, .f = kom_model)) 
 ```
 
-
 ```{r}
 kom_model(pm2_n$aar) %>% 
    summary()
 ```
+
 ```{r}
 pm2_n %>% 
    filter(aar%in% c("2008")) %>% 
@@ -236,4 +255,3 @@ coef_df <- mod_sum %>%
    map_df() %>% 
    as.tibble()
 ```
-
