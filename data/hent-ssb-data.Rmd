@@ -4,8 +4,6 @@ author: "Heidi and Ann Elisabeth"
 output: html_notebook
 ---
 
-
-
 ```{r setup}
 suppressPackageStartupMessages({
 library(PxWebApiData)
@@ -76,7 +74,6 @@ pm2 <- pm2 %>%
   select(knr, aar, pm2, knavn)
 ```
 
- 
 ```{r}
 load("test_string_tib.Rdata")
 moenster <- '\\s*\\([\\d\\s-]*\\d*\\)\\s*$'
@@ -92,7 +89,6 @@ pm2 <- pm2 %>%
     knavn = str_replace(knavn,moenster,"")
   )
 ```
-
 
 ```{r NA }
 pm2 %>% 
@@ -145,20 +141,15 @@ pm2 <- pm2 %>%
    na.omit()
 ```
 
-
-
 da har vi fått variablene knr inn i datasettet pm2
 
 ```{r}
 names(pm2_2008)
 ```
 
-
-
 ```{r Rydde opp}
 rm(pm2_raw)
 ```
-
 
 \#Befolkning
 
@@ -197,16 +188,16 @@ names(pop_08_17_ya)[[4]] <- "ya_Kvinner"
 ```
 
 her skal vi finne totalen for menn og kvinner
+
 ```{r}
 pop_08_17_ya <- pop_08_17_ya %>% 
    mutate(ya_Total = ya_Menn+ya_Kvinner)
 ```
 
-
-
 ```{r}
 dim(pop_08_17_ya)
 ```
+
 Vi får tallene 4230 og 5.
 
 ```{r}
@@ -214,8 +205,8 @@ names(pop_08_17_ya)
 
 ```
 
-ii. befolkningen totalt
-henting av nye data fra tabell 07459 for å finne totalen for hele befolkningen
+ii. befolkningen totalt henting av nye data fra tabell 07459 for å finne
+    totalen for hele befolkningen
 
 ```{r}
 pop_08_17_raw <- ApiData(
@@ -250,6 +241,7 @@ names(pop_08_17)[[5]] <- "Kvinner"
 ```
 
 variablene for menn og kvinner med hensyn til alder
+
 ```{r}
 pop_08_17 <- pop_08_17 %>%
   pivot_wider(
@@ -257,7 +249,7 @@ pop_08_17 <- pop_08_17 %>%
               values_from = c(Menn, Kvinner))
 ```
 
-mutate for å definere nye variabler 
+mutate for å definere nye variabler
 
 ```{r}
 pop_08_17 <- pop_08_17 %>% 
@@ -271,7 +263,6 @@ pop_08_17 <- pop_08_17 %>%
   select(knr, aar, Menn_t, Kvinner_t, Total_t)
 ```
 
-
 ```{r}
 dim(pop_08_17)
 ```
@@ -280,13 +271,14 @@ dim(pop_08_17)
 names(pop_08_17)
 ```
 
-i. slå sammen pop_08_17ya og pop_08_17
+i.  slå sammen pop_08_17ya og pop_08_17
 
 ```{r merge}
 pop_08_17_ya_p <- merge(pop_08_17, pop_08_17_ya)
 ```
 
-nye variabler 
+nye variabler
+
 ```{r}
 pop_08_17_ya_p <- pop_08_17_ya_p %>% 
   mutate(Menn_ya_p = ya_Menn/Menn_t*100) %>% 
@@ -302,7 +294,6 @@ pop_08_17_ya_p <- pop_08_17_ya_p %>%
 ```{r}
 names(pop_08_17_ya_p)
 ```
-
 
 ```{r}
 head(pop_08_17_ya_p, n=5)
@@ -320,6 +311,7 @@ pm2 <- pm2 %>%
 ```
 
 rydde opp
+
 ```{r Slette objekter}
 rm(pop_08_17_raw, pop_08_17_ya_raw, pop_08_17, pop_08_17_ya, pm2_2006, pm2_2008)
 ```
@@ -328,9 +320,8 @@ rm(pop_08_17_raw, pop_08_17_ya_raw, pop_08_17, pop_08_17_ya, pm2_2006, pm2_2008)
 rm(test_string_tib)
 ```
 
+\#Inntektsdesiler henter inne nye data fra tabell 12558
 
-\#Inntektsdesiler
-henter inne nye data fra tabell 12558
 ```{r}
 inc_08_17_raw <- ApiData(
   urlToData = "12558",
@@ -391,9 +382,10 @@ pm2 <- merge(pm2, inc_08_17)
 rm(inc_08_17, inc_08_17_raw, pop_08_17_ya_p)
 ```
 
-#Prosent av befolkning med universitets/høgskole utdanning
+\#Prosent av befolkning med universitets/høgskole utdanning
 
 her henter vi først inn en ny tabell, med nye data
+
 ```{r ny tabell}
 uni_p_raw <- ApiData(
   urlToData = "09429",
@@ -411,7 +403,6 @@ uni_p_raw <- ApiData(
 uni_p <- uni_p_raw
 ```
 
-
 ```{r}
 uni_p <- tibble(
    knr = uni_p$dataset$Region,
@@ -424,7 +415,8 @@ uni_p <- tibble(
  head(uni_p, n=5)
 ```
 
-i. rekode nivåene for variabelen nivaa til uni_k og uni_l
+i.  rekode nivåene for variabelen nivaa til uni_k og uni_l
+
 ```{r}
 uni_p <- uni_p %>% 
    mutate(
@@ -462,7 +454,6 @@ head(uni_p, n = 8)
 dim(uni_p)
 ```
 
-
 Flettes sammen:
 
 ```{r}
@@ -473,11 +464,10 @@ pm2 <- merge(pm2, uni_p)
 rm(uni_p, uni_p_raw)
 ```
 
-
-
 \#Handelsomsetning pr innbygger
 
 henter inn nye data fra tabell 04776
+
 ```{r}
 trade_08_17 <- ApiData(
   urlToData = "04776",
@@ -487,7 +477,6 @@ trade_08_17 <- ApiData(
 )
 
 ```
-
 
 ```{r}
 trade_08_17 <- tibble(
@@ -517,12 +506,10 @@ rm(trade_08_17, Trade_pc)
 dim(pm2)
 ```
 
-
 ```{r}
 names(pm2)
 
 ```
-
 
 ```{r}
 pm2 %>% 
@@ -546,7 +533,3 @@ pm2 %>%
 ```{r}
 write.csv(pm2, "pm2.csv")
 ```
-
-
-
-
