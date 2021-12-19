@@ -1,5 +1,6 @@
 ---
 title: "Modeller"
+Autor: Ann Elisabth and Heidi 
 output: html_notebook
 ---
 
@@ -54,7 +55,7 @@ head(pm2, n = 4)
 tibble("knr", "fnr", "aar_f", "Trade_pc_100k")
 ```
 
-\#Modell
+#Modell
 
 ```{r Modell}
 mod1 <- 'pm2 ~ aar_f + Total_ya_p + inc_k1 + inc_k5 + uni_k_mf + uni_l_mf + Trade_pc_100K'
@@ -75,7 +76,11 @@ head(pm2, n = 4)
 ```{r Oppsummering}
 summary(lm1)
 ```
+ut i fra verdien på års koeffisientene kan vi lese at det er en økning på o,1% fra 2010 til 2017. vi ser en økning fra år til år. 
 
+ut i fra vår kunnskap er vi enige om at de er som forventet 
+
+Heteroskedastisitet
 ```{r}
 bptest(lm1)
 ```
@@ -89,11 +94,17 @@ Rapportere robuste standard feil og tilhørende robuste t-verdier
 coeftest(lm1)
 ```
 
-Flytter residualene fra lm1 til datasettet pm2
-
 ```{r}
 vcovHC(lm1)
 ```
+
+Flytter residualene fra lm1 til datasettet pm2
+
+```{r}
+pm2 <- pm2 %>%
+  add_residuals(lm1)
+```
+
 
 lager ny variabel
 
@@ -121,13 +132,26 @@ pm2 %>%
   unnest(c(fylke)) %>% 
   group_by(fylke, aar_d) %>% 
   summarise(mean_fylke = mean(resid)) %>% 
-  ggplot(mapping = aes(x= aar_d, y= mean_fylke, colour = fylke)) +
-  geom_line(lwd=1) +
+  ggplot(mapping = aes(x = aar_d, y = mean_fylke, colour = fylke)) +
+  geom_line(lwd = 1) +
   geom_hline(yintercept = 0, colour = "white") +
   theme(legend.position = "bottom")
 ```
 
-\#Dummy fylke og år
+```{r}
+pm2 %>% 
+  filter(fylke %in% c("01", "02", "03", "11", "12")) %>%
+  unnest(c(fylke)) %>%
+  group_by (fylke, aar_d) %>%
+  summarise(mean_fylke = mean(resid)) %>%
+  ggplot(aes(x=aar_d, y=mean_fylke, colour = fylke)) +
+  geom_line(lwd=1) +
+  geom_hline(yintercept = 0, colour = "black") +
+  theme(legend.position = "bottom")
+```
+
+
+#Dummy fylke og år
 
 Vi innfører en dummy for hvert fylke
 
@@ -164,9 +188,9 @@ theme(legend.position = 'bottom') +
   facet_wrap(~fylke)
 ```
 
-i.  
+i.  kvaliteten på modell 2 ?
 
-ii. 
+ii. er det grunn til å mistenke at vi mangler variabler. ja vi mistenker dette.
 
 Vi filtrerer med hensyn på fylke "11"
 
@@ -177,7 +201,7 @@ scale_color_viridis(discrete = TRUE, option = "D") +
 geom_line(aes(group = knavn, colour = knavn, size = knavn)) +
 scale_size_manual(values = c(seq(2.0, 0.5, by = -0.1))) +
 geom_hline(yintercept = 0) +
-theme(legend.position = 'bottom'
+theme(legend.position = 'bottom')
 ```
 
 Vi gjentar plottet ovenfor med utvalgte kommuner
@@ -192,9 +216,9 @@ geom_hline(yintercept = 0) +
 theme(legend.position = 'bottom')
 ```
 
-Det som kjennetegner kommunene i Rogland
+Det som kjennetegner kommunene i Rogland er at i Stavanger blir overvurdert
 
-\#Modell for hvert år
+#Modell for hvert år
 
 i.  
 
@@ -217,7 +241,7 @@ pm2_n$data[[1]] %>%
 ```{r}
 dim(pm2_n)
 ```
-
+kom modell
 ```{r}
 kom_model <- function(a_df) {
    lm(pm2 ~ fnr + Total_ya_p + inc_k1 + inc_k5 + uni_k_mf + uni_l_mf + Trade_pc_100K, data = pm2)
@@ -234,6 +258,7 @@ kom_model(pm2_n$aar) %>%
    summary()
 ```
 
+5. 
 ```{r}
 pm2_n %>% 
    filter(aar%in% c("2008")) %>% 
