@@ -127,7 +127,7 @@ pm2 %>%
   theme(legend.position = "bottom")
 ```
 
-\#Dummy fylke og år
+#Dummy fylke og år
 
 Vi innfører en dummy for hvert fylke
 
