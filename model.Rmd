@@ -76,9 +76,9 @@ head(pm2, n = 4)
 ```{r Oppsummering}
 summary(lm1)
 ```
-ut i fra verdien på års koeffisientene kan vi lese at det er en økning på o,1% fra 2010 til 2017. vi ser en økning fra år til år. 
+Ut i fra verdien på års koeffisientene kan vi lese at det er en økning på o,1% fra 2010 til 2017. Vi ser en økning fra år til år. 
 
-ut i fra vår kunnskap er vi enige om at de er som forventet 
+Vi antar at de øvrige koeffisientene er som forventet, da kvadrattmeter prisen har til vane å øke fra år til år.   
 
 Heteroskedastisitet
 ```{r}
@@ -286,3 +286,11 @@ coef_df <- mod_sum$model %>%
   # legges i en tibble 
    tibble()
 ```
+
+```{r}
+coef_df_long <- coef_df %>% 
+  pivot_longer(cols = ,
+               names_to = ,
+               values_to = )
+```
+
