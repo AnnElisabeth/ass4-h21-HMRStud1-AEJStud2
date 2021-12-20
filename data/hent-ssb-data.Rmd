@@ -531,5 +531,6 @@ pm2 %>%
 ```
 
 ```{r}
-write.csv(pm2, "pm2.csv")
+# Bruk tidyverse versjonen( "_" istedenfor "."). Den er bedre
+write_csv(pm2, "pm2.csv")
 ```
