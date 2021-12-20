@@ -80,15 +80,14 @@ Ut i fra verdien på års koeffisientene kan vi lese at det er en økning på o,
 
 Vi antar at de øvrige koeffisientene er som forventet, da kvadrattmeter prisen har til vane å øke fra år til år.   
 
-Heteroskedastisitet
-```{r}
+#Heteroskedastisitet
+```{r bptest}
 bptest(lm1)
 ```
 
-Ja vi har problemer med heteroskedasiteten her pga at verdien er for
-høy.
+Ja vi har problemer med heteroskedasiteten her pga at verdien er for høy.
 
-Rapportere robuste standard feil og tilhørende robuste t-verdier
+#Rapportere robuste standard feil og tilhørende robuste t-verdier
 
 ```{r}
 coeftest(lm1)
@@ -98,7 +97,7 @@ coeftest(lm1)
 vcovHC(lm1)
 ```
 
-Flytter residualene fra lm1 til datasettet pm2
+#Flytter residualene fra lm1 til datasettet pm2
 
 ```{r}
 pm2 <- pm2 %>%
@@ -189,11 +188,11 @@ theme(legend.position = 'bottom') +
   facet_wrap(~fylke)
 ```
 
-i.  kvaliteten på modell 2 ?
 
-ii. er det grunn til å mistenke at vi mangler variabler. ja vi mistenker dette.
+Ut fra modell 2 kan de være vanskelig å eksakte svar. med flere variabler ville nok bilde blitt et annet. 
 
-Vi filtrerer med hensyn på fylke "11"
+
+#Vi filtrerer med hensyn på fylke "11"
 
 ```{r}
 pm2 %>% filter(fnr %in% c("11")) %>%
@@ -205,7 +204,7 @@ geom_hline(yintercept = 0) +
 theme(legend.position = 'bottom')
 ```
 
-Vi gjentar plottet ovenfor med utvalgte kommuner
+#Vi gjentar plottet ovenfor med utvalgte kommuner
 
 ```{r}
 pm2 %>% filter(knr %in% c("1119", "1120", "1127", "1121", "1130", "1135", "1106", "1149")) %>%
@@ -217,7 +216,7 @@ geom_hline(yintercept = 0) +
 theme(legend.position = 'bottom')
 ```
 
-Det som kjennetegner kommunene i Rogland er at i Stavanger blir overvurdert
+Det som kjennetegner de utvalgte kommunene i Rogaland stor spredning fra kommunene. vi kan se at Sauda blir undervurdert i forhold til gjennomsnittet mens Hå og Klepp blir overvurdert. som vil si de har dyrere kvadratmeter pris i forhold til gjennomsnittet. 
 
 #Modell for hvert år
 
@@ -265,15 +264,10 @@ pm2_n <- pm2_n %>%
 #    summary()
 ```
 
-5. 
-```{r}
-
-```
+5.
 
 ```{r}
 mod_sum <- pm2_n %>% 
-  # Har bare disse årene så unødvendig
-   # filter(aar %in% c("2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017")) %>% 
    mutate(mod_summary = map(.x = model, .f = glance)) %>% 
    unnest(mod_summary) %>% 
    print()
@@ -287,10 +281,16 @@ coef_df <- mod_sum$model %>%
    tibble()
 ```
 
+
+
 ```{r}
 coef_df_long <- coef_df %>% 
-  pivot_longer(cols = ,
+  pivot_longer(cols =  ,
                names_to = ,
                values_to = )
+```
+
+```{r}
+
 ```
 
