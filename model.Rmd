@@ -189,7 +189,7 @@ theme(legend.position = 'bottom') +
   facet_wrap(~fylke)
 ```
 
-i.  kvaliteten på modell 2 ?
+i.  Kvaliteten på modell 2 ?
 
 ii. er det grunn til å mistenke at vi mangler variabler. ja vi mistenker dette.
 
@@ -247,8 +247,9 @@ pm2_n$data[[1]] %>%
 ```{r}
 dim(pm2_n)
 ```
-kom modell
-```{r}
+
+
+```{r Kom modell}
 # må bruke a_df i funksjonen ellers vil den alltid bruke pm2
 kom_model <- function(a_df) {
    lm(pm2 ~ fnr + Total_ya_p + inc_k1 + inc_k5 + uni_k_mf + uni_l_mf + Trade_pc_100K, data = a_df)
@@ -261,8 +262,8 @@ pm2_n <- pm2_n %>%
 ```
 
 ```{r}
-# kom_model(pm2_n$aar) %>% 
-#    summary()
+kom_model(pm2_n$aar) %>% 
+summary()
 ```
 
 5. 
@@ -288,9 +289,50 @@ coef_df <- mod_sum$model %>%
 ```
 
 ```{r}
-coef_df_long <- coef_df %>% 
-  pivot_longer(cols = ,
-               names_to = ,
-               values_to = )
+coef_df %>%
+  
 ```
 
+
+```{r}
+coef_df_long <- coef_df %>%
+   pivot_longer(names_to = "aar_d",
+                values_to = "year")
+```
+
+```{r}
+coef_df_long %>% 
+  filter(
+    variables %in% c("fnr02", "fnr03", "fnr04", "fnr10", "fnr11", "fnr12", "fnr14")) %>%
+ ggplot(mapping = aes(x = aar, y = coef, colour = variables)) +
+ scale_color_viridis(discrete = TRUE, option = "D") +
+  geom_line(aes(group = variable.names()les), lwd = 1) + 
+  theme(legend.position = 'bottom')
+```
+
+
+```{r}
+coef_df_long %>% 
+  select(aar, variables, coef) %>%
+  filter(
+    variables %in% c("fnr02", "fnr03", "fnr04", "fnr10", "fnr11", "fnr12", "fnr14")) %>%
+  ggplot(mapping = aes(x = aar, y = coef, colour = variables)) +
+  scale_color_viridis(discrete = TRUE, option = "D") + 
+  geom_line(aes(group = variable.names()les), lwd = 1) + 
+  theme(legend.position = 'bottom')
+```
+
+
+```{r}
+coef_df_long %>% 
+  select(aar, variables, coef) %>%
+  filter(
+    variables %in% c("Total_ya_p", "ink_k1", "ink_k5", "uni_k_mf", "uni_l_mf", "Trade_pc_100K")) %>%
+  ggplot(mapping = aes(x = aar, y = coef, colour = variables)) +
+  scale_color_viridis(discrete = TRUE, option = "D") + 
+  geom_line(aes(group = variable.names()les), lwd = 1) + 
+  theme(legend.position = 'bottom')
+```
+
+
+Alle er stabile med unntak av Trade_pc_100K. 
