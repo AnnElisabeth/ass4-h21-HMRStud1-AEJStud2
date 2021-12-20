@@ -121,8 +121,6 @@ mutate(fylke = substr(knr, start = 1, stop = 2))
 ```
 
 ```{r}
-# Her overskriver dere pm2. Lager heller en ny pm2_red
-# Bruker pm2_red for å lage plottene
 pm2_red <- pm2 %>% 
   filter(fylke %in% c("01", "02", "03", "11", "12"))
 ```
