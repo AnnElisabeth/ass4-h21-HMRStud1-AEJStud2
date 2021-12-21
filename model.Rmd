@@ -1,6 +1,6 @@
 ---
 title: "Modeller"
-Autor: Ann Elisabth and Heidi
+Author: "Ann Elisabeth and Heidi"
 output:
   pdf_document: default
   html_notebook: default
@@ -16,6 +16,8 @@ suppressPackageStartupMessages({
   library(sandwich)
   library(viridis)
 })
+
+knitr::opts_chunk$set(echo=FALSE, include = FALSE)
 ```
 
 ```{r Les inn fil}
