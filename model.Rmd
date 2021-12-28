@@ -2,10 +2,10 @@
 title: "Modeller"
 Author: Ann Elisabeth and Heidi
 output:
+  pdf_document: default
+  html_notebook: default
   html_document:
     df_print: paged
-  html_notebook: default
-  pdf_document: default
 ---
 
 ```{r}
@@ -82,11 +82,14 @@ head(pm2, n = 4)
 ```{r Oppsummering}
 summary(lm1)
 ```
-Ut i fra verdien på års koeffisientene kan vi lese at det er en økning på o,1% fra 2010 til 2017. Vi ser en økning fra år til år. 
 
-Vi antar at de øvrige koeffisientene er som forventet, da kvadrattmeter prisen har til vane å øke fra år til år.   
+Ut i fra verdien på års koeffisientene kan vi lese at det er en økning på o,1% fra 2010 til 2017.
+Vi ser en økning fra år til år.
+
+Vi antar at de øvrige koeffisientene er som forventet, da kvadrattmeter prisen har til vane å øke fra år til år.
 
 #Heteroskedastisitet
+
 ```{r bptest}
 bptest(lm1)
 ```
@@ -109,7 +112,6 @@ vcovHC(lm1)
 pm2 <- pm2 %>%
   add_residuals(lm1)
 ```
-
 
 lager ny variabel
 
@@ -155,7 +157,6 @@ pm2_red %>%
   theme(legend.position = "bottom")
 ```
 
-
 #Dummy fylke og år
 
 Vi innfører en dummy for hvert fylke
@@ -194,10 +195,8 @@ theme(legend.position = 'bottom') +
   facet_wrap(~fylke)
 ```
 
-
-
-Ut fra modell 2 kan de være vanskelig å eksakte svar. med flere variabler ville nok bilde blitt et annet. 
-
+Ut fra modell 2 kan de være vanskelig å eksakte svar.
+med flere variabler ville nok bilde blitt et annet.
 
 #Vi filtrerer med hensyn på fylke "11"
 
@@ -214,7 +213,9 @@ theme(legend.position = 'bottom')
 #Vi gjentar plottet ovenfor med utvalgte kommuner
 
 ```{r}
-pm2 %>% filter(knr %in% c("1119", "1120", "1127", "1121", "1130", "1135", "1106", "1149")) %>%
+pm2 %>% filter(knr %in% c("1119", "1120", "1127", 
+                          "1121", "1130", "1135", "1106", "1149")
+               ) %>%
 ggplot(mapping = aes(x = aar_d, y = res_m2)) +
 scale_color_viridis(discrete = TRUE, option = "A") +
 geom_line(aes(group = knavn, colour = knavn, size =knavn)) +
@@ -223,7 +224,9 @@ geom_hline(yintercept = 0) +
 theme(legend.position = 'bottom')
 ```
 
-Det som kjennetegner de utvalgte kommunene i Rogaland stor spredning fra kommunene. vi kan se at Sauda blir undervurdert i forhold til gjennomsnittet mens Hå og Klepp blir overvurdert. som vil si de har dyrere kvadratmeter pris i forhold til gjennomsnittet. 
+Det som kjennetegner de utvalgte kommunene i Rogaland stor spredning fra kommunene.
+vi kan se at Sauda blir undervurdert i forhold til gjennomsnittet mens Hå og Klepp blir overvurdert.
+som vil si de har dyrere kvadratmeter pris i forhold til gjennomsnittet.
 
 #Modell for hvert år
 
@@ -254,11 +257,14 @@ pm2_n$data[[1]] %>%
 dim(pm2_n)
 ```
 
-
 ```{r Kom modell}
 # må bruke a_df i funksjonen ellers vil den alltid bruke pm2
 kom_model <- function(a_df) {
-   lm(pm2 ~ fnr + Total_ya_p + inc_k1 + inc_k5 + uni_k_mf + uni_l_mf + Trade_pc_100K, data = a_df)
+   lm(
+     formula = pm2 ~ fnr + Total_ya_p + inc_k1 + inc_k5 
+      + uni_k_mf + uni_l_mf + Trade_pc_100K, 
+      data = a_df
+      )
 }
 ```
 
@@ -266,7 +272,6 @@ kom_model <- function(a_df) {
 pm2_n <- pm2_n %>% 
    mutate(model = map(data, .f = kom_model)) 
 ```
-
 
 ```{r}
 # kom_model(pm2_n$aar) %>% 
@@ -330,7 +335,9 @@ coef_df_long %>%
   select(aar, variables, coef) %>%
   # rettet vaiabelnavnene til inc_k1 og inc_k2
   filter(
-    variables %in% c("Total_ya_p", "inc_k1", "inc_k5", "uni_k_mf", "uni_l_mf", "Trade_pc_100K")) %>%
+    variables %in% c("Total_ya_p", "inc_k1", "inc_k5", 
+                     "uni_k_mf", "uni_l_mf", "Trade_pc_100K")
+    ) %>%
   ggplot(mapping = aes(x = aar, y = coef, colour = variables)) +
   scale_color_viridis(discrete = TRUE, option = "D") + 
   geom_line(aes(group = variables), lwd = 2) + 
@@ -342,5 +349,3 @@ Alle er stabile med unntak av Trade_pc_100K.
 ```{r, echo = FALSE}
 # siste
 ```
-
-
