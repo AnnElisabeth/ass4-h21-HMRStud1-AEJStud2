@@ -1,7 +1,9 @@
 ---
 title: "Assignment 4"
 author: "Heidi and Ann Elisabeth"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 ```{r setup}
@@ -10,7 +12,7 @@ library(PxWebApiData)
 library(tidyverse)
 library(lubridate)
 })
-knitr::opts_chunk$set(echo = FALSE, include = FALSE)
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
 ```
 
 ```{r Relevante kommunenummer}
@@ -36,8 +38,10 @@ Tid = c(as.character(2002:2017))
 ```
 
 ```{r Struktur}
-# structure pm2-raw
-str(pm2_raw)
+# Et alternativ er å sette argumenter direkte på str() funksjonen
+# Her har jeg spesifisert at bare de 3 første verdiene skal vises som 
+# eksempel, at linjene skal brytes og at maks vidde er 80 tegn
+str(pm2_raw, vec.len = 3, strict.width = "wrap", width = 80)
 ```
 
 Ser at resultatet fra ssb er en liste med 2 elementer. Element 2 er kalt
@@ -404,13 +408,24 @@ uni_p <- uni_p_raw
 ```
 
 ```{r}
+names(uni_p)[[1]] <- "desc"
+```
+
+
+```{r}
 uni_p <- tibble(
    knr = uni_p$dataset$Region,
    aar = uni_p$dataset$Tid,
-   Kjonn = uni_p$`09429: Personer 16 år og over, etter region, nivå, kjønn, statistikkvariabel og år`$kjønn,
-   nivaa = uni_p$`09429: Personer 16 år og over, etter region, nivå, kjønn, statistikkvariabel og år`$nivå,
+   # Virker dårlig med pdf output, går langt utenfor margen
+   # har derfor skiftet navn til desc ovenfor
+   #   Kjonn = uni_p$`09429: Personer 16 år og over, 
+   # etter region, nivå, kjønn, statistikkvariabel og år`$kjønn,
+   #   nivaa = uni_p$`09429: Personer 16 år og over, etter region, 
+   # nivå, kjønn, statistikkvariabel og år`$nivå,
+   Kjonn = uni_p$desc$kjønn,
+   nivaa = uni_p$desc$nivå,
    uni_p = uni_p$dataset$value
- )
+)
 
  head(uni_p, n=5)
 ```
@@ -527,10 +542,14 @@ pm2 %>%
 pm2 %>% 
    select(uni_k_mf:Trade_p) %>% 
    head(n=8)
-
 ```
 
 ```{r}
 # Bruk tidyverse versjonen( "_" istedenfor "."). Den er bedre
 write_csv(pm2, "pm2.csv")
 ```
+
+```{r, echo = FALSE}
+# siste
+```
+

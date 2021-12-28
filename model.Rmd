@@ -1,9 +1,11 @@
 ---
 title: "Modeller"
-Author: "Ann Elisabeth and Heidi"
+Author: Ann Elisabeth and Heidi
 output:
-  pdf_document: default
+  html_document:
+    df_print: paged
   html_notebook: default
+  pdf_document: default
 ---
 
 ```{r}
@@ -17,7 +19,7 @@ suppressPackageStartupMessages({
   library(viridis)
 })
 
-knitr::opts_chunk$set(echo=FALSE, include = FALSE)
+knitr::opts_chunk$set(echo=TRUE, include = TRUE)
 ```
 
 ```{r Les inn fil}
